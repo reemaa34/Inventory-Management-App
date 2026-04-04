@@ -3,8 +3,10 @@ package com.example.inventoryapp;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,11 +18,24 @@ public class RegisterActivity extends AppCompatActivity {
     private Button btnRegister;
     private TextView tvLogin;
     private DatabaseHelper dbHelper;
+    private Spinner spinnerRole;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+
+        spinnerRole = findViewById(R.id.spinnerRole);
+
+        String[] roles = {"employee", "admin"};
+
+        spinnerRole.setAdapter(
+                new ArrayAdapter<>(
+                        this,
+                        android.R.layout.simple_spinner_dropdown_item,
+                        roles
+                )
+        );
 
         dbHelper = new DatabaseHelper(this);
 
@@ -40,10 +55,12 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void attemptRegister() {
+
         String username = etUsername.getText().toString().trim();
         String email = etEmail.getText().toString().trim();
         String password = etPassword.getText().toString().trim();
         String confirmPassword = etConfirmPassword.getText().toString().trim();
+        String role = spinnerRole.getSelectedItem().toString();
 
         if (TextUtils.isEmpty(username)) {
             etUsername.setError("Username is required");
@@ -87,19 +104,38 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
-        if (dbHelper.isEmailExists(email)) {
-            etEmail.setError("Email already registered");
-            etEmail.requestFocus();
-            return;
-        }
+        dbHelper.isEmailExists(email, exists -> {
 
-        boolean success = dbHelper.registerUser(username, email, password);
-        if (success) {
-            Toast.makeText(this, "Registration successful! Please login.", Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(this, LoginActivity.class));
-            finish();
-        } else {
-            Toast.makeText(this, "Registration failed. Try again.", Toast.LENGTH_SHORT).show();
-        }
+            if (exists) {
+                etEmail.setError("Email already registered");
+                etEmail.requestFocus();
+                return;
+            }
+
+            dbHelper.registerUser(username, email, password, role, success -> {
+
+                if (success) {
+                    Toast.makeText(
+                            RegisterActivity.this,
+                            "Registration successful! Please login.",
+                            Toast.LENGTH_SHORT
+                    ).show();
+
+                    startActivity(
+                            new Intent(RegisterActivity.this, LoginActivity.class)
+                    );
+
+                    finish();
+
+                } else {
+
+                    Toast.makeText(
+                            RegisterActivity.this,
+                            "Registration failed. Try again.",
+                            Toast.LENGTH_SHORT
+                    ).show();
+                }
+            });
+        });
     }
 }

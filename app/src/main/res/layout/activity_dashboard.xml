@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -6,22 +7,32 @@
     android:layout_height="match_parent"
     android:background="@color/background">
 
+    <!-- Toolbar -->
+
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/primary"
-            app:titleTextColor="@android:color/white" />
+            app:title="Inventory Dashboard"
+            app:titleTextColor="@android:color/white"
+            app:popupTheme="@style/PopupMenuTheme"/>
+
     </com.google.android.material.appbar.AppBarLayout>
+
+
+    <!-- Content Scroll Area -->
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -29,7 +40,9 @@
             android:orientation="vertical"
             android:padding="16dp">
 
+
             <!-- Welcome Text -->
+
             <TextView
                 android:id="@+id/tvWelcome"
                 android:layout_width="wrap_content"
@@ -38,14 +51,19 @@
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="@color/text_primary"
-                android:layout_marginBottom="16dp" />
+                android:layout_marginBottom="16dp"/>
 
-            <!-- Stats Cards Row 1 -->
+
+            <!-- Stats Row 1 -->
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_marginBottom="8dp">
+
+
+                <!-- Total Items -->
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="0dp"
@@ -55,28 +73,35 @@
                     app:cardCornerRadius="12dp"
                     app:cardElevation="4dp"
                     app:cardBackgroundColor="@color/primary">
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="vertical"
-                        android:gravity="center"
-                        android:padding="8dp">
+                        android:gravity="center">
+
                         <TextView
                             android:id="@+id/tvTotalItems"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
                             android:text="0"
                             android:textSize="32sp"
                             android:textStyle="bold"
-                            android:textColor="@android:color/white" />
-                        <TextView
+                            android:textColor="@android:color/white"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_height="wrap_content"/>
+
+                        <TextView
                             android:text="Total Items"
                             android:textSize="12sp"
-                            android:textColor="@android:color/white" />
+                            android:textColor="@android:color/white"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+
                     </LinearLayout>
+
                 </androidx.cardview.widget.CardView>
+
+
+                <!-- Low Stock -->
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="0dp"
@@ -86,37 +111,46 @@
                     app:cardCornerRadius="12dp"
                     app:cardElevation="4dp"
                     app:cardBackgroundColor="#FF9800">
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="vertical"
-                        android:gravity="center"
-                        android:padding="8dp">
+                        android:gravity="center">
+
                         <TextView
                             android:id="@+id/tvLowStock"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
                             android:text="0"
                             android:textSize="32sp"
                             android:textStyle="bold"
-                            android:textColor="@android:color/white" />
-                        <TextView
+                            android:textColor="@android:color/white"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_height="wrap_content"/>
+
+                        <TextView
                             android:text="Low Stock"
                             android:textSize="12sp"
-                            android:textColor="@android:color/white" />
+                            android:textColor="@android:color/white"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+
                     </LinearLayout>
+
                 </androidx.cardview.widget.CardView>
 
             </LinearLayout>
 
-            <!-- Stats Cards Row 2 -->
+
+            <!-- Stats Row 2 -->
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_marginBottom="16dp">
+
+
+                <!-- Out of Stock -->
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="0dp"
@@ -126,28 +160,35 @@
                     app:cardCornerRadius="12dp"
                     app:cardElevation="4dp"
                     app:cardBackgroundColor="#F44336">
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="vertical"
-                        android:gravity="center"
-                        android:padding="8dp">
+                        android:gravity="center">
+
                         <TextView
                             android:id="@+id/tvOutOfStock"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
                             android:text="0"
                             android:textSize="32sp"
                             android:textStyle="bold"
-                            android:textColor="@android:color/white" />
-                        <TextView
+                            android:textColor="@android:color/white"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_height="wrap_content"/>
+
+                        <TextView
                             android:text="Out of Stock"
                             android:textSize="12sp"
-                            android:textColor="@android:color/white" />
+                            android:textColor="@android:color/white"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+
                     </LinearLayout>
+
                 </androidx.cardview.widget.CardView>
+
+
+                <!-- Total Value -->
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="0dp"
@@ -157,75 +198,89 @@
                     app:cardCornerRadius="12dp"
                     app:cardElevation="4dp"
                     app:cardBackgroundColor="#4CAF50">
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="vertical"
-                        android:gravity="center"
-                        android:padding="8dp">
+                        android:gravity="center">
+
                         <TextView
                             android:id="@+id/tvTotalValue"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
                             android:text="₹0"
                             android:textSize="20sp"
                             android:textStyle="bold"
-                            android:textColor="@android:color/white" />
-                        <TextView
+                            android:textColor="@android:color/white"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_height="wrap_content"/>
+
+                        <TextView
                             android:text="Total Value"
                             android:textSize="12sp"
-                            android:textColor="@android:color/white" />
+                            android:textColor="@android:color/white"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+
                     </LinearLayout>
+
                 </androidx.cardview.widget.CardView>
 
             </LinearLayout>
 
-            <!-- Search Bar -->
+
+            <!-- Search -->
+
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Search items..."
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_marginBottom="12dp">
+
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etSearch"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="text" />
+                    android:layout_height="wrap_content"/>
+
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Inventory List Label -->
+
+            <!-- Section Label -->
+
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:text="Inventory Items"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:textColor="@color/text_primary"
-                android:layout_marginBottom="8dp" />
+                android:layout_marginBottom="8dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
 
             <!-- RecyclerView -->
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:nestedScrollingEnabled="false" />
+                android:nestedScrollingEnabled="false"/>
 
         </LinearLayout>
+
     </androidx.core.widget.NestedScrollView>
 
-    <!-- FAB -->
+
+    <!-- Add Item Floating Button -->
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAdd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
+        android:layout_gravity="bottom|end"
         android:src="@android:drawable/ic_input_add"
+        android:contentDescription="Add Item"
         app:backgroundTint="@color/primary"
-        app:tint="@android:color/white"
-        android:contentDescription="Add Item" />
+        app:tint="@android:color/white"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

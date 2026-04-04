@@ -17,4 +17,16 @@
     <string name="low_stock">Low Stock</string>
     <string name="out_of_stock">Out of Stock</string>
     <string name="total_value">Total Value</string>
+    <string name="sell_item">Sell Item</string>
+    <string name="reports_analytics">Reports &amp; Analytics</string>
+    <string name="dashboard_title">Inventory Dashboard</string>
+    <string name="welcome_user">Hello, %1$s!</string>
+    <string name="delete_item_title">Delete Item</string>
+    <string name="delete_item_message">Delete "%1$s"?</string>
+    <string name="delete">Delete</string>
+    <string name="item_deleted">Item deleted</string>
+    <string name="total_value_format">₹%.2f</string>
+    <string name="quantity">Quantity</string>
+    <string name="customer_name">Customer Name</string>
+    <string name="sell_stock">Sell Stock</string>
 </resources>

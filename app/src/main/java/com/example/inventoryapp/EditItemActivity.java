@@ -112,13 +112,24 @@ public class EditItemActivity extends AppCompatActivity {
         currentItem.setDescription(description);
         currentItem.setMinStock(TextUtils.isEmpty(minStockStr) ? 5 : Integer.parseInt(minStockStr));
 
-        if (dbHelper.updateItem(currentItem)) {
-            Toast.makeText(this, "Item updated successfully!", Toast.LENGTH_SHORT).show();
-            setResult(RESULT_OK);
-            finish();
-        } else {
-            Toast.makeText(this, "Failed to update item", Toast.LENGTH_SHORT).show();
-        }
+        dbHelper.updateItem(currentItem, success -> {
+
+            if (success) {
+
+                Toast.makeText(this,
+                        "Item updated successfully!",
+                        Toast.LENGTH_SHORT).show();
+
+                setResult(RESULT_OK);
+                finish();
+
+            } else {
+
+                Toast.makeText(this,
+                        "Failed to update item",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override

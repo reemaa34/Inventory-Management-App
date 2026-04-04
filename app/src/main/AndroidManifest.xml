@@ -23,6 +23,8 @@
         <activity android:name=".DashboardActivity" android:exported="false"/>
         <activity android:name=".AddItemActivity" android:exported="false"/>
         <activity android:name=".EditItemActivity" android:exported="false"/>
+        <activity android:name=".Reports" android:exported="false"/>
+        <activity android:name=".SellStockActivity" android:exported="false"/>
 
     </application>
 

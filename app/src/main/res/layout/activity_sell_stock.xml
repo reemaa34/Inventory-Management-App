@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbarSell"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/primary"
+        app:title="@string/sell_item"
+        app:titleTextColor="@android:color/white"/>
+
+
+    <!-- Category -->
+
+    <Spinner
+        android:id="@+id/spinnerCategory"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:importantForAutofill="no"/>
+
+
+    <!-- Item -->
+
+    <Spinner
+        android:id="@+id/spinnerItems"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:importantForAutofill="no"/>
+
+
+    <!-- Quantity -->
+
+    <EditText
+        android:id="@+id/etSellQuantity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/quantity"
+        android:inputType="number"
+        android:autofillHints="postalCode"
+        android:layout_marginTop="16dp"/>
+
+
+    <!-- Customer -->
+
+    <EditText
+        android:id="@+id/etCustomer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/customer_name"
+        android:inputType="textPersonName"
+        android:autofillHints="personName"
+        android:layout_marginTop="16dp"/>
+
+
+    <!-- Submit -->
+
+    <Button
+        android:id="@+id/btnSellStock"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/sell_stock"
+        android:layout_marginTop="24dp"/>
+
+</LinearLayout>

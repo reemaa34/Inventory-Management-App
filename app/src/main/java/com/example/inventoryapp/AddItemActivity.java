@@ -89,16 +89,29 @@ public class AddItemActivity extends AppCompatActivity {
         String createdAt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
                 .format(new Date());
 
-        InventoryItem item = new InventoryItem(name, category, quantity, price, description, minStock, createdAt);
-        long id = dbHelper.addItem(item);
+        InventoryItem item = new InventoryItem(
+                name, category, quantity, price,
+                description, minStock, createdAt
+        );
 
-        if (id != -1) {
-            Toast.makeText(this, "Item added successfully!", Toast.LENGTH_SHORT).show();
-            setResult(RESULT_OK);
-            finish();
-        } else {
-            Toast.makeText(this, "Failed to add item", Toast.LENGTH_SHORT).show();
-        }
+        dbHelper.addItem(item, success -> {
+
+            if (success) {
+
+                Toast.makeText(this,
+                        "Item added successfully!",
+                        Toast.LENGTH_SHORT).show();
+
+                setResult(RESULT_OK);
+                finish();
+
+            } else {
+
+                Toast.makeText(this,
+                        "Failed to add item",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
