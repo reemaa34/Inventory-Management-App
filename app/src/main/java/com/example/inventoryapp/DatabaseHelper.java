@@ -413,18 +413,21 @@ public class DatabaseHelper {
                         return;
                     }
 
-                    final double[] total = {0};
+                    double total = 0;
 
                     for (DocumentSnapshot doc : snapshot) {
 
-                        Long qty =
-                                doc.getLong("quantity");
+                        Long qty   = doc.getLong("quantity");
+                        // price_at_sale was added in the fixed insertSale().
+                        // For older records that lack it, fall back to 0.
+                        Double price = doc.getDouble("price_at_sale");
 
-                        if (qty != null)
-                            total[0] += qty;
+                        if (qty != null && price != null) {
+                            total += qty * price;   // correct: revenue = qty × price
+                        }
                     }
 
-                    callback.onCallback(total[0]);
+                    callback.onCallback(total);
                 })
                 .addOnFailureListener(e ->
                         callback.onCallback(0.0));
@@ -435,19 +438,20 @@ public class DatabaseHelper {
 
     public void insertSale(String itemId,
                            int quantity,
+                           double priceAtSale,   // Bug 2 fix: persist price so revenue = qty × price
                            String customer,
                            String soldBy,
                            String timestamp,
                            BooleanCallback callback) {
 
-        Map<String,Object> sale =
-                new HashMap<>();
+        Map<String,Object> sale = new HashMap<>();
 
-        sale.put("item_id", itemId);
-        sale.put("quantity", quantity);
-        sale.put("customer", customer);
-        sale.put("sold_by", soldBy);
-        sale.put("timestamp", timestamp);
+        sale.put("item_id",       itemId);
+        sale.put("quantity",      quantity);
+        sale.put("price_at_sale", priceAtSale);  // stored so getTotalRevenue can multiply
+        sale.put("customer",      customer);
+        sale.put("sold_by",       soldBy);
+        sale.put("timestamp",     timestamp);
 
         db.collection("sales")
                 .add(sale)

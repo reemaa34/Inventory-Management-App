@@ -153,6 +153,7 @@ public class SellStockActivity extends AppCompatActivity {
             dbHelper.insertSale(
                     selected.getId(),
                     qty,
+                    selected.getPrice(),          // Bug 2 fix: capture price at time of sale
                     etCustomer.getText().toString(),
                     sessionManager.getUsername(),
                     timestamp,
@@ -177,6 +178,7 @@ public class SellStockActivity extends AppCompatActivity {
 
                         finish();
                     });
+
         });
     }
 }

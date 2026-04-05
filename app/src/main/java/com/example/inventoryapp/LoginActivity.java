@@ -9,6 +9,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -20,10 +21,14 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // ── Feature 3: Apply saved night mode before any view inflation ──
+        SessionManager sm = new SessionManager(this);
+        AppCompatDelegate.setDefaultNightMode(sm.getNightMode());
+
         super.onCreate(savedInstanceState);
 
         dbHelper = new DatabaseHelper(this);
-        sessionManager = new SessionManager(this);
+        sessionManager = sm;
 
         if (sessionManager.isLoggedIn()) {
             startActivity(new Intent(this, DashboardActivity.class));

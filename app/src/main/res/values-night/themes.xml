@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Keep same theme for night — override if needed -->
-    <style name="Theme.InventoryApp" parent="Theme.MaterialComponents.Light.NoActionBar">
+    <!-- Feature 3: Dark variant of the app theme -->
+    <style name="Theme.InventoryApp" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorAccent">@color/accent</item>
         <item name="android:statusBarColor">@color/primary_dark</item>
         <item name="android:windowBackground">@color/background</item>
+        <!-- Make EditText, hints, etc. respect dark background -->
+        <item name="android:textColorPrimary">@color/text_primary</item>
+        <item name="android:textColorSecondary">@color/text_secondary</item>
+    </style>
+
+    <style name="PopupMenuTheme" parent="ThemeOverlay.MaterialComponents">
+        <item name="android:textColor">@color/text_primary</item>
     </style>
 </resources>

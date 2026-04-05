@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Feature 3: Dark palette — overrides values/colors.xml in night mode -->
+    <color name="primary">#1E88E5</color>
+    <color name="primary_dark">#1565C0</color>
+    <color name="primary_light">#90CAF9</color>
+    <color name="accent">#FF7043</color>
+    <color name="background">#121212</color>
+    <color name="surface">#1E1E1E</color>
+    <color name="text_primary">#EFEFEF</color>
+    <color name="text_secondary">#AAAAAA</color>
+    <color name="divider">#333333</color>
+    <color name="status_green">#66BB6A</color>
+    <color name="status_orange">#FFA726</color>
+    <color name="status_red">#EF5350</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+</resources>

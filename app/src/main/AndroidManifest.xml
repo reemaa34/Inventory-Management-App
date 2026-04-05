@@ -2,6 +2,17 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.inventoryapp">
 
+    <!-- Feature 1: Camera for barcode/QR scanning -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
+
+    <!-- Feature 2: Storage for export on API <= 28 -->
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -25,6 +36,21 @@
         <activity android:name=".EditItemActivity" android:exported="false"/>
         <activity android:name=".Reports" android:exported="false"/>
         <activity android:name=".SellStockActivity" android:exported="false"/>
+        <activity android:name=".AuditActivity" android:exported="false"/>
+
+        <!-- Feature 3: Settings / Dark Mode -->
+        <activity android:name=".SettingsActivity" android:exported="false"/>
+
+        <!-- Feature 2: FileProvider to share exported files -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
 
     </application>
 

@@ -52,11 +52,19 @@ public class AuditActivity extends AppCompatActivity {
             dbHelper.getTotalRevenue(revenue -> {
 
                 totalRevenue = revenue;
+
+                // Bug 3 fix:
+                // profitLoss = Revenue - Cost of current inventory stock is WRONG.
+                // Gross Profit here = Total Revenue (money collected from sales).
+                // We don't have COGS separately stored, so we show what we know correctly:
+                //   Row 1 — current inventory value (stock on hand)
+                //   Row 2 — total revenue earned from all sales
+                //   Row 3 — difference: how much revenue exceeds remaining inventory value
                 profitLoss = totalRevenue - totalStockValue;
 
-                addRow("Total Inventory Value", totalStockValue);
-                addRow("Total Revenue", totalRevenue);
-                addRow("Net Profit / Loss", profitLoss);
+                addRow("Current Inventory Value",  totalStockValue);
+                addRow("Total Sales Revenue",       totalRevenue);
+                addRow("Revenue vs Stock Difference", profitLoss);
             });
         });
     }

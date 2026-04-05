@@ -49,4 +49,10 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-firestore")
     implementation("com.google.android.gms:play-services-tasks:18.1.0")
+
+    // Feature 1: Barcode / QR Code Scanner
+    implementation("com.journeyapps:zxing-android-embedded:4.3.0")
+
+    // Feature 2: Export — PDF uses built-in android.graphics.pdf.PdfDocument (no extra dep)
+    // CSV uses standard Java I/O (no extra dep)
 }

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- App-specific internal files directory -->
+    <files-path name="internal_files" path="." />
+    <!-- App-specific external files directory (no permission needed on API 29+) -->
+    <external-files-path name="external_files" path="." />
+    <!-- Cache directory -->
+    <cache-path name="cache" path="." />
+</paths>

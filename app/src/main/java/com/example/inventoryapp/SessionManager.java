@@ -9,9 +9,12 @@ public class SessionManager {
     private static final String PREF_NAME = "InventorySession";
 
     private static final String KEY_IS_LOGGED_IN = "isLoggedIn";
-    private static final String KEY_EMAIL = "email";
-    private static final String KEY_USERNAME = "username";
-    private static final String KEY_ROLE = "role";
+    private static final String KEY_EMAIL        = "email";
+    private static final String KEY_USERNAME     = "username";
+    private static final String KEY_ROLE         = "role";
+    // Feature 3: night mode preference
+    private static final String KEY_NIGHT_MODE   = "nightMode";
+
 
     private final SharedPreferences prefs;
     private final SharedPreferences.Editor editor;
@@ -102,4 +105,20 @@ public class SessionManager {
 
         context.startActivity(intent);
     }
-}
+
+    // ── Feature 3: Dark Mode helpers ──
+
+    /**
+     * Returns the saved AppCompatDelegate night mode integer.
+     * Default: -1 (MODE_NIGHT_FOLLOW_SYSTEM)
+     */
+    public int getNightMode() {
+        return prefs.getInt(KEY_NIGHT_MODE,
+                androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+    }
+
+    public void setNightMode(int mode) {
+        editor.putInt(KEY_NIGHT_MODE, mode);
+        editor.apply();
+    }
+}
