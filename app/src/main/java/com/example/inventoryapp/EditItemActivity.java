@@ -9,6 +9,15 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import android.net.Uri;
+import android.widget.ImageView;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.activity.result.ActivityResultLauncher;
+import com.bumptech.glide.Glide;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import java.util.UUID;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -21,6 +30,18 @@ public class EditItemActivity extends AppCompatActivity {
     private Button btnUpdate, btnCancel;
     private DatabaseHelper dbHelper;
     private InventoryItem currentItem;
+
+    private ImageView ivProductPreview;
+    private Button btnSelectImage;
+    private Uri imageUri;
+
+    private final ActivityResultLauncher<Intent> imagePickerLauncher =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                    imageUri = result.getData().getData();
+                    if (ivProductPreview != null) ivProductPreview.setImageURI(imageUri);
+                }
+            });
 
     private final String[] categories = {"Electronics", "Clothing", "Food & Beverage", "Furniture",
             "Tools", "Stationery", "Medicine", "Sports", "Toys", "Other"};
@@ -53,6 +74,23 @@ public class EditItemActivity extends AppCompatActivity {
         spinnerCategory = findViewById(R.id.spinnerCategory);
         btnUpdate = findViewById(R.id.btnSave);
         btnCancel = findViewById(R.id.btnCancel);
+
+        ivProductPreview = findViewById(R.id.ivProductPreview);
+        btnSelectImage = findViewById(R.id.btnSelectImage);
+
+        btnSelectImage.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.setType("image/*");
+            imagePickerLauncher.launch(intent);
+        });
+
+        // Load existing image if any
+        if (currentItem.getImageUrl() != null && !currentItem.getImageUrl().isEmpty()) {
+            Glide.with(this)
+                 .load(currentItem.getImageUrl())
+                 .placeholder(android.R.drawable.ic_menu_gallery)
+                 .into(ivProductPreview);
+        }
 
         btnUpdate.setText("Update Item");
 
@@ -146,22 +184,33 @@ public class EditItemActivity extends AppCompatActivity {
         currentItem.setDescription(description);
         currentItem.setMinStock(TextUtils.isEmpty(minStockStr) ? 5 : Integer.parseInt(minStockStr));
 
+        if (imageUri != null) {
+            Toast.makeText(this, "Uploading image...", Toast.LENGTH_SHORT).show();
+            StorageReference storageRef = FirebaseStorage.getInstance().getReference()
+                    .child("productImages/" + UUID.randomUUID().toString());
+            
+            storageRef.putFile(imageUri).addOnSuccessListener(taskSnapshot -> {
+                storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                    currentItem.setImageUrl(uri.toString());
+                    updateItemInDB();
+                });
+            }).addOnFailureListener(e -> {
+                Toast.makeText(this, "Image upload failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                updateItemInDB();
+            });
+        } else {
+            updateItemInDB();
+        }
+    }
+
+    private void updateItemInDB() {
         dbHelper.updateItem(currentItem, success -> {
-
             if (success) {
-
-                Toast.makeText(this,
-                        "Item updated successfully!",
-                        Toast.LENGTH_SHORT).show();
-
+                Toast.makeText(this, "Item updated successfully!", Toast.LENGTH_SHORT).show();
                 setResult(RESULT_OK);
                 finish();
-
             } else {
-
-                Toast.makeText(this,
-                        "Failed to update item",
-                        Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Failed to update item", Toast.LENGTH_SHORT).show();
             }
         });
     }

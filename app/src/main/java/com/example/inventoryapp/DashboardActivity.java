@@ -28,8 +28,7 @@ import com.journeyapps.barcodescanner.ScanOptions;
 
 import java.util.List;
 
-public class DashboardActivity extends AppCompatActivity
-        implements InventoryAdapter.OnItemActionListener, CategoryAdapter.OnCategoryClickListener {
+public class DashboardActivity extends AppCompatActivity implements InventoryAdapter.OnItemActionListener, CategoryAdapter.OnCategoryClickListener {
 
     private static final int CAMERA_PERMISSION_REQUEST = 102;
 
@@ -47,6 +46,8 @@ public class DashboardActivity extends AppCompatActivity
     private SessionManager sessionManager;
 
     private List<InventoryItem> itemList;
+    private List<InventoryItem> originalList;
+private boolean isSortedByCategory = false;
 
     private boolean isAdmin = false;
 
@@ -204,17 +205,22 @@ public class DashboardActivity extends AppCompatActivity
     }
 
     private void loadData() {
-        dbHelper.getAllItems(items -> {
-            itemList = items;
-            adapter = new InventoryAdapter(
-                    DashboardActivity.this,
-                    itemList,
-                    DashboardActivity.this
-            );
-            recyclerView.setAdapter(adapter);
-            updateStats();
-        });
-    }
+    dbHelper.getAllItems(items -> {
+        itemList = items;
+
+        // ⭐ Save original list
+        originalList = new java.util.ArrayList<>(items);
+
+        adapter = new InventoryAdapter(
+                DashboardActivity.this,
+                itemList,
+                DashboardActivity.this
+        );
+        recyclerView.setAdapter(adapter);
+        updateStats();
+    });
+}
+
 
     private void updateStats() {
         dbHelper.getTotalItems(value ->
@@ -234,6 +240,7 @@ public class DashboardActivity extends AppCompatActivity
             dbHelper.getAllItems(items -> {
                 if (adapter != null) {
                     adapter.updateList(items);
+                    originalList = new java.util.ArrayList<>(items);
                     if (recyclerView.getAdapter() != adapter) {
                         recyclerView.setAdapter(adapter);
                     }
@@ -243,6 +250,7 @@ public class DashboardActivity extends AppCompatActivity
             dbHelper.searchItems(query, items -> {
                 if (adapter != null) {
                     adapter.updateList(items);
+                    originalList = new java.util.ArrayList<>(items);
                     if (recyclerView.getAdapter() != adapter) {
                         recyclerView.setAdapter(adapter);
                     }

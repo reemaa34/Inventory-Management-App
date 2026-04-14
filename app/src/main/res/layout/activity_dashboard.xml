@@ -245,8 +245,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
-                    app:singleSelection="true"
-                    app:selectionRequired="true"
+                    app:singleSelection="false"
+                    app:selectionRequired="false"
                     app:checkedButton="@+id/btnAllItems">
 
                     <Button
