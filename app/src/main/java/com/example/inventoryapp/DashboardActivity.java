@@ -75,6 +75,9 @@ public class DashboardActivity extends AppCompatActivity
         recyclerView  = findViewById(R.id.recyclerView);
         btnScanSearch = findViewById(R.id.btnScanSearch);
         toggleGroupFilter = findViewById(R.id.toggleGroupFilter);
+        findViewById(R.id.btnSortPrice).setOnClickListener(v -> {
+            toggleSortByPrice();
+        });
 
         tvWelcome.setText(getString(R.string.welcome_user, sessionManager.getUsername()));
 
@@ -94,14 +97,14 @@ public class DashboardActivity extends AppCompatActivity
         btnScanSearch.setOnClickListener(v -> launchScanSearch());
 
         toggleGroupFilter.addOnButtonCheckedListener((group, checkedId, isChecked) -> {
-            if (isChecked) {
-                if (checkedId == R.id.btnAllItems) {
-                    showAllItems();
-                } else if (checkedId == R.id.btnCategories) {
-                    showCategories();
-                }
-            }
-        });
+    if (isChecked) {
+        if (checkedId == R.id.btnAllItems) {
+            showAllItems();
+        } else if (checkedId == R.id.btnCategories) {
+            showCategories();
+        }
+    }
+});
 
         setupBottomNavigation();
         loadData();
@@ -285,6 +288,35 @@ public class DashboardActivity extends AppCompatActivity
             loadData();
         }
     }
+    private boolean isSorted = false;
+private List<InventoryItem> originalList;
+
+
+
+private void toggleSortByPrice() {
+
+    if (itemList == null || adapter == null) return;
+
+    if (!isSorted) {
+        originalList = new java.util.ArrayList<>(itemList);
+
+        java.util.Collections.sort(itemList, (a, b) ->
+                Double.compare(a.getPrice(), b.getPrice())
+        );
+
+        Toast.makeText(this, "Sorted by Price", Toast.LENGTH_SHORT).show();
+        isSorted = true;
+
+    } else {
+        itemList.clear();
+        itemList.addAll(originalList);
+
+        Toast.makeText(this, "Original Order Restored", Toast.LENGTH_SHORT).show();
+        isSorted = false;
+    }
+
+    adapter.updateList(itemList);
+}
 
 }
 
