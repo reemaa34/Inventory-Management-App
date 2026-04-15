@@ -35,6 +35,7 @@ public class AddItemActivity extends AppCompatActivity {
     private Button btnSave, btnCancel;
     private TextInputLayout tilBarcode;
     private DatabaseHelper dbHelper;
+    private SessionManager sessionManager;
     private String[] categories = {"Electronics", "Clothing", "Food & Beverage", "Furniture",
             "Tools", "Stationery", "Medicine", "Sports", "Toys", "Other"};
 
@@ -48,6 +49,7 @@ public class AddItemActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_item);
 
         dbHelper = new DatabaseHelper(this);
+        sessionManager = new SessionManager(this);
 
         etBarcode     = findViewById(R.id.etBarcode);
         etItemName    = findViewById(R.id.etItemName);
@@ -90,7 +92,7 @@ public class AddItemActivity extends AppCompatActivity {
                 finish();
                 return true;
             } else if (id == R.id.nav_reports) {
-                startActivity(new Intent(this, Reports.class));
+                startActivity(new Intent(this, ReportsActivity.class));
                 finish();
                 return true;
             } else if (id == R.id.nav_settings) {
@@ -207,19 +209,32 @@ public class AddItemActivity extends AppCompatActivity {
         double price = Double.parseDouble(priceStr);
         int minStock = TextUtils.isEmpty(minStockStr) ? 5 : Integer.parseInt(minStockStr);
 
-        String createdAt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+        String timestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
                 .format(new Date());
 
         InventoryItem item = new InventoryItem(
                 name, barcode, category, quantity, price,
-                description, minStock, createdAt
+                description, minStock, timestamp
         );
 
         dbHelper.addItem(item, success -> {
             if (success) {
-                Toast.makeText(this, "Item added successfully!", Toast.LENGTH_SHORT).show();
-                setResult(RESULT_OK);
-                finish();
+                // Log Audit: Added new item
+                AuditLog auditLog = new AuditLog(
+                        "ADDED",
+                        item.getName(),
+                        item.getId(),
+                        item.getQuantity(),
+                        sessionManager.getUsername(),
+                        sessionManager.getEmail(),
+                        timestamp,
+                        "New item added to inventory"
+                );
+                dbHelper.insertAuditLog(auditLog, auditSuccess -> {
+                    Toast.makeText(this, "Item added successfully!", Toast.LENGTH_SHORT).show();
+                    setResult(RESULT_OK);
+                    finish();
+                });
             } else {
                 Toast.makeText(this, "Failed to add item", Toast.LENGTH_SHORT).show();
             }

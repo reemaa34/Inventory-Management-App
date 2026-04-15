@@ -4,8 +4,10 @@ import android.content.Context;
 
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,6 +52,10 @@ public class DatabaseHelper {
 
     public interface ItemCallback {
         void onCallback(InventoryItem item);
+    }
+
+    public interface AuditLogListCallback {
+        void onCallback(List<AuditLog> logs);
     }
 
 
@@ -468,7 +474,7 @@ public class DatabaseHelper {
     public void insertSale(String itemId,
                            String itemName,
                            int quantity,
-                           double priceAtSale,   // Bug 2 fix: persist price so revenue = qty × price
+                           double priceAtSale,   // Bug 2 fix: capture price at time of sale
                            String customer,
                            String soldBy,
                            String timestamp,
@@ -504,6 +510,53 @@ public class DatabaseHelper {
                             logs.add(log);
                         }
                     }
+                    callback.onCallback(logs);
+                })
+                .addOnFailureListener(e -> callback.onCallback(new ArrayList<>()));
+    }
+
+    // ================= AUDIT METHODS =================
+
+    public void insertAuditLog(AuditLog log, BooleanCallback callback) {
+        db.collection("audit_logs")
+                .add(log)
+                .addOnSuccessListener(doc -> callback.onCallback(true))
+                .addOnFailureListener(e -> callback.onCallback(false));
+    }
+
+    public void getAllAuditLogs(AuditLogListCallback callback) {
+        db.collection("audit_logs")
+                .orderBy("timestamp", Query.Direction.DESCENDING)
+                .get()
+                .addOnSuccessListener(snapshot -> {
+                    List<AuditLog> logs = new ArrayList<>();
+                    for (DocumentSnapshot doc : snapshot) {
+                        AuditLog log = doc.toObject(AuditLog.class);
+                        if (log != null) {
+                            log.setId(doc.getId());
+                            logs.add(log);
+                        }
+                    }
+                    callback.onCallback(logs);
+                })
+                .addOnFailureListener(e -> callback.onCallback(new ArrayList<>()));
+    }
+
+    public void getAuditLogsByItem(String itemId, AuditLogListCallback callback) {
+        db.collection("audit_logs")
+                .whereEqualTo("item_id", itemId)
+                .get()
+                .addOnSuccessListener(snapshot -> {
+                    List<AuditLog> logs = new ArrayList<>();
+                    for (DocumentSnapshot doc : snapshot) {
+                        AuditLog log = doc.toObject(AuditLog.class);
+                        if (log != null) {
+                            log.setId(doc.getId());
+                            logs.add(log);
+                        }
+                    }
+                    // Sort locally to avoid needing a composite index in Firestore
+                    Collections.sort(logs, (a, b) -> b.getTimestamp().compareTo(a.getTimestamp()));
                     callback.onCallback(logs);
                 })
                 .addOnFailureListener(e -> callback.onCallback(new ArrayList<>()));

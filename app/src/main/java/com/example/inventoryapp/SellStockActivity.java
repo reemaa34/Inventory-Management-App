@@ -81,7 +81,7 @@ public class SellStockActivity extends AppCompatActivity {
             } else if (id == R.id.nav_sell) {
                 return true;
             } else if (id == R.id.nav_reports) {
-                startActivity(new Intent(this, Reports.class));
+                startActivity(new Intent(this, ReportsActivity.class));
                 finish();
                 return true;
             } else if (id == R.id.nav_add) {
@@ -206,13 +206,25 @@ public class SellStockActivity extends AppCompatActivity {
                             return;
                         }
 
-                        Toast.makeText(
-                                this,
-                                "Sale recorded",
-                                Toast.LENGTH_SHORT
-                        ).show();
-
-                        finish();
+                        // Audit Log: Item Sold
+                        AuditLog auditLog = new AuditLog(
+                                "SOLD",
+                                selected.getName(),
+                                selected.getId(),
+                                qty,
+                                sessionManager.getUsername(),
+                                sessionManager.getEmail(),
+                                timestamp,
+                                "Sold to: " + etCustomer.getText().toString()
+                        );
+                        dbHelper.insertAuditLog(auditLog, auditSuccess -> {
+                            Toast.makeText(
+                                    this,
+                                    "Sale recorded",
+                                    Toast.LENGTH_SHORT
+                            ).show();
+                            finish();
+                        });
                     });
 
         });

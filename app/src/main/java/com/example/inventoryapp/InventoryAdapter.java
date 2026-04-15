@@ -23,6 +23,7 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
     public interface OnItemActionListener {
         void onEdit(InventoryItem item);
         void onDelete(InventoryItem item);
+        void onItemClick(InventoryItem item);
     }
 
     public InventoryAdapter(Context context, List<InventoryItem> items, OnItemActionListener listener) {
@@ -68,6 +69,9 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
 
         holder.btnEdit.setOnClickListener(v -> listener.onEdit(item));
         holder.btnDelete.setOnClickListener(v -> listener.onDelete(item));
+        
+        // ⭐ NEW: Click listener for the whole card to show history
+        holder.itemView.setOnClickListener(v -> listener.onItemClick(item));
     }
 
     @Override

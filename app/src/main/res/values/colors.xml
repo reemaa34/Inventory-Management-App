@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <color name="primary">#252F6B</color>
     <color name="primary_dark">#362261</color>
     <color name="primary_light">#5C659C</color>
@@ -11,18 +10,16 @@
     <color name="text_secondary">#8A8A8A</color>
     <color name="divider">#EFEFEF</color>
     <color name="status_green">#4CAF50</color>
-<!--    <color name="primary">#1976D2</color>-->
-<!--    <color name="primary_dark">#0D47A1</color>-->
-<!--    <color name="primary_light">#BBDEFB</color>-->
-<!--    <color name="accent">#FF5722</color>-->
-<!--    <color name="background">#F5F5F5</color>-->
-<!--    <color name="surface">#FFFFFF</color>-->
-<!--    <color name="text_primary">#212121</color>-->
-<!--    <color name="text_secondary">#757575</color>-->
-<!--    <color name="divider">#BDBDBD</color>-->
-<!--    <color name="status_green">#4CAF50</color>-->
     <color name="status_orange">#FF9800</color>
     <color name="status_red">#F44336</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- Chart & Toggle Colors -->
+    <color name="chart_orange">#FF9800</color>
+    <color name="chart_blue">#03A9F4</color>
+    <color name="chart_green">#4CAF50</color>
+    <color name="chart_yellow">#FFEB3B</color>
+    <color name="orange_gradient_start">#FFB74D</color>
+    <color name="orange_gradient_end">#FF9800</color>
 </resources>

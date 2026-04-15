@@ -48,12 +48,10 @@ public class AuditActivity extends AppCompatActivity {
 
     private void setupBottomNavigation() {
         BottomNavigationView bottomNavigation = findViewById(R.id.bottomNavigation);
-        // Audit isn't in the menu, but we can keep the nav visible. 
-        // Maybe it should be under Reports?
         bottomNavigation.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
             if (id == R.id.nav_reports) {
-                startActivity(new Intent(this, Reports.class));
+                startActivity(new Intent(this, ReportsActivity.class));
                 finish();
                 return true;
             } else if (id == R.id.nav_sell) {

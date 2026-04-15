@@ -2,7 +2,9 @@ package com.example.inventoryapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -18,7 +20,8 @@ public class SettingsActivity extends AppCompatActivity {
     private RadioGroup radioGroupTheme;
     private RadioButton radioLight, radioDark, radioSystem;
     private TextView tvProfileName, tvProfileEmail, tvProfileRole;
-    private Button btnLogout;
+    private Button btnLogout, btnViewAudits;
+    private LinearLayout adminSection;
     private SessionManager sessionManager;
 
     @Override
@@ -40,6 +43,10 @@ public class SettingsActivity extends AppCompatActivity {
         tvProfileRole    = findViewById(R.id.tvProfileRole);
         btnLogout        = findViewById(R.id.btnLogout);
 
+        // Admin views
+        adminSection     = findViewById(R.id.adminSection);
+        btnViewAudits    = findViewById(R.id.btnViewAudits);
+
         // Appearance views
         radioGroupTheme  = findViewById(R.id.radioGroupTheme);
         radioLight       = findViewById(R.id.radioLight);
@@ -52,6 +59,16 @@ public class SettingsActivity extends AppCompatActivity {
         tvProfileRole.setText("Role: " + sessionManager.getRole());
 
         btnLogout.setOnClickListener(v -> sessionManager.logout());
+
+        // Role-based visibility for Admin Section
+        if ("admin".equalsIgnoreCase(sessionManager.getRole())) {
+            adminSection.setVisibility(View.VISIBLE);
+            btnViewAudits.setOnClickListener(v -> {
+                startActivity(new Intent(this, AuditActivity.class));
+            });
+        } else {
+            adminSection.setVisibility(View.GONE);
+        }
 
         // Load saved preference and check the matching radio
         int savedMode = sessionManager.getNightMode();
@@ -94,7 +111,7 @@ public class SettingsActivity extends AppCompatActivity {
                 finish();
                 return true;
             } else if (id == R.id.nav_reports) {
-                startActivity(new Intent(this, Reports.class));
+                startActivity(new Intent(this, ReportsActivity.class));
                 finish();
                 return true;
             } else if (id == R.id.nav_sell) {
