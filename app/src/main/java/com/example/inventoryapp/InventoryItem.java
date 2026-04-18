@@ -13,6 +13,7 @@ public class InventoryItem implements Serializable {
     private String description;
     private int minStock;
     private String createdAt;
+    private String imageUrl; // New field for product image
 
     public InventoryItem() {}
 
@@ -23,7 +24,8 @@ public class InventoryItem implements Serializable {
                          double price,
                          String description,
                          int minStock,
-                         String createdAt) {
+                         String createdAt,
+                         String imageUrl) { // Update constructor
 
         this.name = name;
         this.barcode = barcode;
@@ -33,6 +35,7 @@ public class InventoryItem implements Serializable {
         this.description = description;
         this.minStock = minStock;
         this.createdAt = createdAt;
+        this.imageUrl = imageUrl;
     }
 
 
@@ -68,6 +71,9 @@ public class InventoryItem implements Serializable {
 
     public String getCreatedAt() { return createdAt; }
     public void setCreatedAt(String createdAt) { this.createdAt = createdAt; }
+
+    public String getImageUrl() { return imageUrl; }
+    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
 
 
     public boolean isLowStock() {

@@ -265,14 +265,17 @@
                         android:layout_weight="1"
                         android:text="Categories" />
 
+
                 </com.google.android.material.button.MaterialButtonToggleGroup>
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnSortPrice"
+                    android:id="@+id/btnSortOptions"
                     style="?attr/materialButtonOutlinedStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Sort Price" />
+                    android:text="Sort Options"
+                    app:icon="@android:drawable/ic_menu_sort_by_size"
+                    app:iconGravity="textStart" />
 
                 <TextView
                     android:id="@+id/tvSectionLabel"

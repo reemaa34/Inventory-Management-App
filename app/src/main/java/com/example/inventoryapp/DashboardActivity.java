@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +29,8 @@ import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanIntentResult;
 import com.journeyapps.barcodescanner.ScanOptions;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class DashboardActivity extends AppCompatActivity
@@ -49,15 +52,13 @@ public class DashboardActivity extends AppCompatActivity
     private SessionManager sessionManager;
 
     private List<InventoryItem> itemList;
-
-    // ⭐ NEW: Variables for tracking sorting state and keeping a backup of the original list
     private List<InventoryItem> originalList;
-    private boolean isSorted = false;
 
     private boolean isAdmin = false;
 
     private final ActivityResultLauncher<ScanOptions> scanSearchLauncher =
             registerForActivityResult(new ScanContract(), this::onScanSearchResult);
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,10 +82,7 @@ public class DashboardActivity extends AppCompatActivity
         btnScanSearch = findViewById(R.id.btnScanSearch);
         toggleGroupFilter = findViewById(R.id.toggleGroupFilter);
 
-        // ⭐ NEW: Set up the click listener for the sort button
-        findViewById(R.id.btnSortPrice).setOnClickListener(v -> {
-            toggleSortByPrice();
-        });
+        findViewById(R.id.btnSortOptions).setOnClickListener(this::showSortMenu);
 
         tvWelcome.setText(getString(R.string.welcome_user, sessionManager.getUsername()));
 
@@ -117,6 +115,45 @@ public class DashboardActivity extends AppCompatActivity
         loadData();
     }
 
+    private void showSortMenu(View view) {
+        if (itemList == null || itemList.isEmpty()) return;
+
+        PopupMenu popup = new PopupMenu(this, view);
+        popup.getMenu().add("Price: Low to High");
+        popup.getMenu().add("Price: High to Low");
+        popup.getMenu().add("Stock: Low to High");
+        popup.getMenu().add("Stock: High to Low");
+        popup.getMenu().add("Original Order");
+
+        popup.setOnMenuItemClickListener(item -> {
+            String title = item.getTitle().toString();
+            switch (title) {
+                case "Price: Low to High":
+                    Collections.sort(itemList, (a, b) -> Double.compare(a.getPrice(), b.getPrice()));
+                    break;
+                case "Price: High to Low":
+                    Collections.sort(itemList, (a, b) -> Double.compare(b.getPrice(), a.getPrice()));
+                    break;
+                case "Stock: Low to High":
+                    Collections.sort(itemList, (a, b) -> Integer.compare(a.getQuantity(), b.getQuantity()));
+                    break;
+                case "Stock: High to Low":
+                    Collections.sort(itemList, (a, b) -> Integer.compare(b.getQuantity(), a.getQuantity()));
+                    break;
+                case "Original Order":
+                    itemList.clear();
+                    itemList.addAll(originalList);
+                    break;
+            }
+            if (adapter != null) {
+                adapter.updateList(itemList);
+            }
+            Toast.makeText(this, "Sorted by: " + title, Toast.LENGTH_SHORT).show();
+            return true;
+        });
+        popup.show();
+    }
+
     private void showAllItems() {
         tvSectionLabel.setText("Inventory Items");
         loadData();
@@ -134,7 +171,6 @@ public class DashboardActivity extends AppCompatActivity
     public void onCategoryClick(String category) {
         etSearch.setText(category);
         toggleGroupFilter.check(R.id.btnAllItems);
-        // filterItems will be called by TextWatcher
     }
 
     private void setupBottomNavigation() {
@@ -148,7 +184,7 @@ public class DashboardActivity extends AppCompatActivity
                 startActivity(new Intent(this, SellStockActivity.class));
                 return true;
             } else if (id == R.id.nav_reports) {
-                startActivity(new Intent(this, ReportsActivity.class));
+                startActivity(new Intent(this, Reports.class));
                 return true;
             } else if (id == R.id.nav_add) {
                 startActivity(new Intent(this, AddItemActivity.class));
@@ -160,6 +196,7 @@ public class DashboardActivity extends AppCompatActivity
             return false;
         });
     }
+
 
     private void launchScanSearch() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
@@ -212,10 +249,7 @@ public class DashboardActivity extends AppCompatActivity
     private void loadData() {
         dbHelper.getAllItems(items -> {
             itemList = items;
-
-            // ⭐ NEW: Save a copy of the original list when data is loaded
-            originalList = new java.util.ArrayList<>(items);
-
+            originalList = new ArrayList<>(items);
             adapter = new InventoryAdapter(
                     DashboardActivity.this,
                     itemList,
@@ -242,12 +276,10 @@ public class DashboardActivity extends AppCompatActivity
     private void filterItems(String query) {
         if (query.isEmpty()) {
             dbHelper.getAllItems(items -> {
+                itemList = items;
+                originalList = new ArrayList<>(items);
                 if (adapter != null) {
-                    adapter.updateList(items);
-
-                    // ⭐ NEW: Update original list backup
-                    originalList = new java.util.ArrayList<>(items);
-
+                    adapter.updateList(itemList);
                     if (recyclerView.getAdapter() != adapter) {
                         recyclerView.setAdapter(adapter);
                     }
@@ -255,12 +287,10 @@ public class DashboardActivity extends AppCompatActivity
             });
         } else {
             dbHelper.searchItems(query, items -> {
+                itemList = items;
+                originalList = new ArrayList<>(items);
                 if (adapter != null) {
-                    adapter.updateList(items);
-
-                    // ⭐ NEW: Update original list backup
-                    originalList = new java.util.ArrayList<>(items);
-
+                    adapter.updateList(itemList);
                     if (recyclerView.getAdapter() != adapter) {
                         recyclerView.setAdapter(adapter);
                     }
@@ -324,7 +354,6 @@ public class DashboardActivity extends AppCompatActivity
         });
 
         dialogView.findViewById(R.id.btnCloseDialog).setOnClickListener(v -> dialog.dismiss());
-
         dialog.show();
     }
 
@@ -338,32 +367,4 @@ public class DashboardActivity extends AppCompatActivity
         }
     }
 
-    // ⭐ NEW: The complete sorting method
-    private void toggleSortByPrice() {
-        if (itemList == null || adapter == null) return;
-
-        if (!isSorted) {
-            // Backup the current state of the list before sorting
-            originalList = new java.util.ArrayList<>(itemList);
-
-            // Sort by price (ascending)
-            java.util.Collections.sort(itemList, (a, b) ->
-                    Double.compare(a.getPrice(), b.getPrice())
-            );
-
-            Toast.makeText(this, "Sorted by Price", Toast.LENGTH_SHORT).show();
-            isSorted = true;
-
-        } else {
-            // Restore the original list
-            itemList.clear();
-            itemList.addAll(originalList);
-
-            Toast.makeText(this, "Original Order Restored", Toast.LENGTH_SHORT).show();
-            isSorted = false;
-        }
-
-        // Notify the adapter of the changes
-        adapter.updateList(itemList);
-    }
 }
