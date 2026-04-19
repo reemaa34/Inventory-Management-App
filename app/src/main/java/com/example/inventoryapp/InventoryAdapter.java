@@ -57,10 +57,10 @@ public class InventoryAdapter extends RecyclerView.Adapter<InventoryAdapter.View
             Glide.with(context)
                 .load(item.getImageUrl())
                 .transform(new CircleCrop())
-                .placeholder(R.mipmap.ic_launcher)
+                .placeholder(R.drawable.app_logo)
                 .into(holder.ivProductImage);
         } else {
-            holder.ivProductImage.setImageResource(R.mipmap.ic_launcher);
+            holder.ivProductImage.setImageResource(R.drawable.app_logo);
         }
 
         // Stock status color coding
