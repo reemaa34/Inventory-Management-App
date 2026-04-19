@@ -29,4 +29,6 @@
     <string name="quantity">Quantity</string>
     <string name="customer_name">Customer Name</string>
     <string name="sell_stock">Sell Stock</string>
+    <string name="splash_emoji">📦</string>
+    <string name="splash_tagline">Smart Inventory Management</string>
 </resources>
